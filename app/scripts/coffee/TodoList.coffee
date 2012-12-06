@@ -1,6 +1,7 @@
 class TodoList
   constructor: (args) ->
     @list = []
+    
     if args instanceof Array
       
       for item in args
@@ -26,6 +27,8 @@ class TodoList
       proj = task.projects()
       if (proj and project in proj)
         l.push task
-    l 
+    l
+
+  sort: () ->
 
 window.TodoList = TodoList

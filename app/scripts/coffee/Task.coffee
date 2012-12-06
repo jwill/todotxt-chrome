@@ -37,7 +37,18 @@ class Task
     # Returns text of task
     raw: ->
       @task
+   
+    isDone: () ->
+      @task.indexOf('x ') is 0
+
+    markAsDone: () ->
+      if (!@isDone())
+        @task = 'x '+@getCurrentDate()+" "+@task
     
+    getCurrentDate: () ->
+      d = new Date()
+      date = if (d.getDate() <10) then '0'+d.getDate() else d.getDate() 
+      [(d.getYear()+1900),d.getMonth()+1,date].join('-')
     overdue: () ->
       if @date is undefined
         return

@@ -113,7 +113,8 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
           output('<div class="ls-files">' + CMDS_.join('<br>') + '</div>');
           output('<p>Add files by dragging them from your desktop.</p>');
           break;
-        case 'a':case 'add':
+        case 'a':
+        case 'add':
           add(args);
           break;
         case 'ls':
@@ -178,24 +179,36 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
   function doTask(args) {
     var num = args[0]
     task = app.todos.list[num-1]
+    task.markAsDone()
+    app.term.output(num +' '+task.toString()+'<br/>');
+    app.term.output('TODO: '+num+ ' marked as done.<br/>');
+    app.term.output(task+'<br/>');
     console.log(task);
-    //Remove task
+    // Archive task
   }
 
   function ls(args) {
     console.log('args:'+args);
-    var self = this;
-    i = 1
-    _.each(app.todos.list, function(it) { 
-      // pad zeros
-      if (i < 10)
-        ii = '0'+i
-      else ii = ""+i
-      app.term.output(ii + ' '+it.raw() + '<br/>')
-      i++;
-    });
-    app.term.output('-- <br/>');
-    app.term.output('TODO: ' + (i-1) +' of '+ app.todos.list.length + ' tasks shown<br/>');
+    if (args.length == 0) {
+      var self = this;
+      i = 1
+      _.each(app.todos.list, function(it) { 
+        // pad zeros
+        if (i < 10)
+          ii = '0' + i
+        else ii = ""+i
+        app.term.output(ii + ' '+it.raw() + '<br/>')
+        i++;
+      });
+      app.term.output('-- <br/>');
+      app.term.output('TODO: ' + (i-1) +' of '+ app.todos.list.length + ' tasks shown<br/>');
+    } else if (args[0].indexOf('+')==0) {
+      console.log(app.todos.byProject(args[0]));
+    } else if (args[0].indexOf('@')==0) {
+      console.log(app.todo.byContext(args[0]));
+    } else {
+
+    }
   }
 
   function formatColumns_(entries) {
