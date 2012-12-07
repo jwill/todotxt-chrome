@@ -14,7 +14,7 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
   var cmdLine_ = document.querySelector(cmdLineContainer);
   var output_ = document.querySelector(outputContainer);
   const VERSION_ = '0.0.1';
-  const CMDS_ = [ /* 'a', 'add','addx', 'archive','lately', 'mit','nav', 'rm', 'depri', 'do'*/
+  const CMDS_ = [  'a', 'add', /*'addx', 'archive','lately', 'mit','nav', 'rm', 'depri',*/ 'do',
     'clear', 'date', 'help', 'ls', 'theme', 'version', 'who'
   ];
   const THEMES_ = ['default', 'cream'];
@@ -23,6 +23,7 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
   var history_ = [];
   var histpos_ = 0;
   var histtemp_ = 0;
+  var manager = new TodoManager(output_);
 
   window.addEventListener('click', function(e) {
     cmdLine_.focus();
@@ -113,30 +114,6 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
           output('<div class="ls-files">' + CMDS_.join('<br>') + '</div>');
           output('<p>Add files by dragging them from your desktop.</p>');
           break;
-        case 'a':
-        case 'add':
-          add(args);
-          break;
-        case 'ls':
-          ls(args);
-          break;
-        case 'do':
-          doTask(args);
-          break;
-        case 'ls2':
-          ls_(function(entries) {
-            if (entries.length) {
-              var html = formatColumns_(entries);
-              util.toArray(entries).forEach(function(entry, i) {
-                html.push(
-                    '<span class="', entry.isDirectory ? 'folder' : 'file',
-                    '">', entry.name, '</span><br>');
-              });
-              html.push('</div>');
-              output(html.join(''));
-            }
-          });
-          break;
         case 'theme':
           var theme = args.join(' ');
           if (!theme) {
@@ -159,9 +136,7 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
                  ' - By: James Williams &lt;james.l.williams@gmail.com&gt;');
           break;
         default:
-          if (cmd) {
-            output(cmd + ': command not found');
-          }
+          manager.handleCommand(cmd,args);
       };
 
       window.scrollTo(0, getDocHeight_());
@@ -239,33 +214,6 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
         break;
     };
     output('<div>Error: ' + msg + '</div>');
-  }
-
-
-
-  function ls_(successCallback) {
-    if (!fs_) {
-      return;
-    }
-
-    // Read contents of current working directory. According to spec, need to
-    // keep calling readEntries() until length of result array is 0. We're
-    // guarenteed the same entry won't be returned again.
-    var entries = [];
-    var reader = cwd_.createReader();
-
-    var readEntries = function() {
-      reader.readEntries(function(results) {
-        if (!results.length) {
-          successCallback(entries.sort());
-        } else {
-          entries = entries.concat(util.toArray(results));
-          readEntries();
-        }
-      }, errorHandler_);
-    };
-
-    readEntries();
   }
 
   function setTheme_(theme) {
