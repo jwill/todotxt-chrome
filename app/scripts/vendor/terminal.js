@@ -14,7 +14,7 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
   var cmdLine_ = document.querySelector(cmdLineContainer);
   var output_ = document.querySelector(outputContainer);
   const VERSION_ = '0.0.1';
-  const CMDS_ = [  'a', 'add', /*'addx', 'archive','lately', 'mit','nav', 'rm', 'depri',*/ 'do',
+  const CMDS_ = [
     'clear', 'date', 'help', 'ls', 'theme', 'version', 'who'
   ];
   const THEMES_ = ['default', 'cream'];
@@ -23,7 +23,7 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
   var history_ = [];
   var histpos_ = 0;
   var histtemp_ = 0;
-  var manager = new TodoManager(output_);
+  window.manager = new TodoManager(output_);
 
   window.addEventListener('click', function(e) {
     cmdLine_.focus();
@@ -111,7 +111,9 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
           output((new Date()).toLocaleString());
           break;
         case 'help':
-          output('<div class="ls-files">' + CMDS_.join('<br>') + '</div>');
+          addedCommands = window.manager.commands;
+          union = _.union(addedCommands, CMDS_);
+          output('<div class="ls-files">' + union.join('<br>') + '</div>');
           output('<p>Add files by dragging them from your desktop.</p>');
           break;
         case 'theme':
@@ -136,7 +138,7 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
                  ' - By: James Williams &lt;james.l.williams@gmail.com&gt;');
           break;
         default:
-          manager.handleCommand(cmd,args);
+          window.manager.handleCommand(cmd,args);
       };
 
       window.scrollTo(0, getDocHeight_());

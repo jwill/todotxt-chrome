@@ -2,18 +2,18 @@
   "name": "Todo.txt for Chrome",
   "manifest_version":2,
   "version":"0.1.1",
-  "app": {
+  "browser_action":{
+    "default_title": "Todo.txt"
+  },
     "background": {
       "scripts": [
 				"app/scripts/background.js"
 			]
-    }
-  },
+    },
   "key":"Q2hyb21lSGFja2F0aG9u",
   "permissions": [
 		"experimental",
-		"storage", 
-		{"fileSystem": ["write"]}, 
-		"notifications"
+		"storage",  
+		"notifications", "tabs"
 	]
 }

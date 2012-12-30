@@ -1,5 +1,5 @@
 class Task
-    constructor: (@task) ->
+    constructor: (@task, @index) ->
 
     # Returns the priority, if any.
     priority: () ->

@@ -3,10 +3,10 @@ class TodoList
     @list = []
     
     if args instanceof Array
-      
+      i = 0
       for item in args
         if (item.constructor.name is 'String' && item isnt "")
-          @list.push(new Task(item))
+          @list.push(new Task(item, ++i))
         else if (item instanceof Task)
           @list.push(item)
 
@@ -28,7 +28,16 @@ class TodoList
       if (proj and project in proj)
         l.push task
     l
+  doneTasks: () ->
+    _.filter(@list, (task) -> task.isDone() is true)
+
+  removeDone: () ->
+    @list = _.filter(@list, (task) -> task.isDone() is false)
+
 
   sort: () ->
+
+  getList: () ->
+    @list
 
 window.TodoList = TodoList
