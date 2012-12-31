@@ -1,17 +1,36 @@
 class TodoManager
   constructor: (@outputContainer) ->
-    filepicker.setKey ("")
-
-    # TODO Load from DB
     @todoURL = ""
     @doneURL = ""
+    self = this
+    db = Lawnchair({name:'tododb'},(tododb) ->
+      # Load URLs to files token if available
+      # also last update time
+      console.log(tododb)
+      db.get('apiKey', (item) -> 
+        if item isnt undefined
+          filepicker.setKey(item.value)
+        else self.handleFirstRun()
+      )
+
+      db.get('todo.txt', (item) ->
+        if item is undefined
+          #filepicker.pick
+        else 
+          self.todoURL = item.url
+          db.get('done.txt', (item) ->
+            self.doneURL = item.url
+          )
+          self.initFiles()
+      )
+    )
+
     @modals = new Modals()
 
     @addedTasks = []
     @doneTasks = []
     @result = {}
 
-    @initFiles()
     @commands = [
       'a', 'add', 'addx', 'archive', 'do', 'ls', 'list'
       'rm'
@@ -115,7 +134,7 @@ class TodoManager
     @output("#{num} #{task.toString()}<br/>")
     @output("TODO: #{num} marked as done.<br/>")
     @output(task+'<br/>')
-    console.log(task)
+
     # Archive task if online
     @archive()
   
