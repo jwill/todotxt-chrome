@@ -12,7 +12,7 @@ class Modals
       <button id="yes">Yes</button>
       <button id="no">No</button>
         """,
-      closeButton: true,
+      closeButton: true
       modalStyles: @modalStyles
     })
     document.querySelector('#yes').onclick = (evt) ->
@@ -24,7 +24,5 @@ class Modals
       modal.close()
 
     return modal
-
-  createFirstRunModal: () ->
 
 window.Modals = Modals

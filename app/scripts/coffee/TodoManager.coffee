@@ -10,12 +10,12 @@ class TodoManager
       db.get('apiKey', (item) -> 
         if item isnt undefined
           filepicker.setKey(item.value)
-        else self.handleFirstRun()
+        else self.handleFirstRun(db, true)
       )
 
       db.get('todo.txt', (item) ->
         if item is undefined
-          #filepicker.pick
+          self.handleFirstRun(db)
         else 
           self.todoURL = item.url
           db.get('done.txt', (item) ->
@@ -24,6 +24,8 @@ class TodoManager
           self.initFiles()
       )
     )
+    @output("Welcome to todo.txt Chrome Edition<br/>")
+    @output("New here? Enter help at the prompt to learn the commands.")
 
     @modals = new Modals()
 
@@ -41,8 +43,9 @@ class TodoManager
   handleCommand: (cmd, args) ->
     switch cmd
       when 'a', 'add'   then @addTask(args)
+      when 'apikey'     then @apiKey(args)
       #when 'addx'      then
-      when 'archive'   then @archive()
+      when 'archive'    then @archive()
       when 'do'         then @doTask(args)
       when 'ls','list'  then @ls(args)
       when 'del','rm'   then @rm(args)
@@ -55,6 +58,19 @@ class TodoManager
 
   output: (html) ->
     @outputContainer.insertAdjacentHTML('beforeEnd', html)
+
+  apiKey: (args) ->
+    self = this
+    db = Lawnchair({name:'tododb'},(tododb) ->
+      if args[0] isnt undefined
+        tododb.save({key:'apiKey', value:args[0]}, (item) ->
+          self.output("Saved API key.")
+        )
+      else tododb.get('apiKey', (item) ->
+        self.output("API key: #{item?.value}")
+      )
+    )
+
 
   addTask: (args) ->
     task = new Task(args.join(' '), @todos.getList().length+1)
@@ -90,7 +106,6 @@ class TodoManager
 
   rm: (args) ->
     self = this
-    console.log(args)
     num = args[0]
     task = _.find(@todos.getList(), (item) -> 
       return new Number(item.index).toFixed() is new Number(num).toFixed()
@@ -211,6 +226,21 @@ class TodoManager
       (error) ->
         console.log("Error: "+error.toString())
     )
+
+  handleFirstRun: (db, apiKeyNotSet) ->
+    if apiKeyNotSet is true
+      outHTML = """
+      <span style='color:red;'>Filepicker API key not set<br/><br/>
+        Set it by executing:<br/>
+        </span>
+      <span style='color:yellow;'> apikey [key] </span><br/>
+      """
+      @output(outHTML)
+    else
+      filepicker.pickMultiple((files) ->
+        for file in files
+          db.save({key:file.filename, url:file.url}, (i)->console.log(i))
+      )
 
   
 window.TodoManager = TodoManager
