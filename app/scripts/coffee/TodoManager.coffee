@@ -20,8 +20,8 @@ class TodoManager
           self.todoURL = item.url
           db.get('done.txt', (item) ->
             self.doneURL = item.url
+            self.initFiles()
           )
-          self.initFiles()
       )
     )
     @output("Welcome to todo.txt Chrome Edition<br/>")
@@ -197,6 +197,7 @@ class TodoManager
       @output("TODO: #{i} of #{@todos.list.length} tasks shown<br/>")
 
   initFiles: () ->
+    console.log(@doneURL)
     @downloadFile({filename:'todo.txt', url:@todoURL})
     @downloadFile({filename:'done.txt', url:@doneURL})
 
@@ -206,14 +207,14 @@ class TodoManager
     file = {url:params.url, asText:true}
     #console.log(file)
     filepicker.read(file, (data) -> 
-      #console.log(data)
       self.result[params['filename']] = data
       lines = data.split('\n')
       if params.filename is 'todo.txt'
         self.todos = new TodoList(lines)
-      if params.filename is 'done.txt'
+      else if params.filename is 'done.txt'
         self.done = new TodoList(lines)
     )
+    return
 
   prepareFile: () ->
     @todos.list.join("\n")
