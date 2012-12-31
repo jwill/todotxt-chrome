@@ -45,7 +45,7 @@ class Lately
 
   usage: () ->
     @output "Recently comlpeted tasks:<br/>"
-    @output "lately+<br/>"
+    @output "lately<br/>"
     @output "<br/>&nbsp;&nbsp;generates a list of completed tasks during the last 7 days.<br/><br/>"
     @output "&nbsp;&nbsp;Optional argument (integer) overrides number of days.<br/>"
     @output "&nbsp;&nbsp;Optional argument (String) project name.<br/>"
