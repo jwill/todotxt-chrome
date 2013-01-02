@@ -1,0 +1,21 @@
+Requires Filepicker.io Dev Account.
+
+Current Features:
+
+- Basic file syncing using filepicker.io
+- Add tasks
+- Remove tasks
+- Mark As Completed
+- List tasks
+- Limited search capabilities
+- Archive
+- Lately plugin
+
+TODO: 
+- Security policy stuff
+- Sorting of tasks by priority
+- Full text search
+- Apply color to prioritized tasks
+- Implementing other core commands (p, depri, etc)
+
+Build/Run: yeoman server (from yeoman.io)
