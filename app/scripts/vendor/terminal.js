@@ -114,7 +114,6 @@ var Terminal = Terminal || function(cmdLineContainer, outputContainer) {
           addedCommands = window.manager.commands;
           union = _.union(addedCommands, CMDS_);
           output('<div class="ls-files">' + union.join('<br>') + '</div>');
-          output('<p>Add files by dragging them from your desktop.</p>');
           break;
         case 'theme':
           var theme = args.join(' ');
